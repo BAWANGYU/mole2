@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=750,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/new_file.css"/>
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//创建一个元素
+			var container = document.createElement("div");
+			//设置类名
+			container.className = "container";
+			//设置ID名
+			container.id = "contaniner";
+			
+			var nav = document.createElement("div");
+			nav.className = "nav";
+			nav.id = "nav";
+			nav.innerHTML = "<div class='time'><img src='img/countdown_time.png' /><span>10s</span></div>"+
+							"<div class='share'><img src='img/countdown_share.png'/></div>"+
+							"<div class='startGame'><img src='img/game_btn_star.png'/></div>"+
+							"<div class='chance'>剩余<span>5</span>次机会</div>";
+			//将top元素对象添加到container元素里
+//			console.log(nav);
+			container.appendChild(nav);
+			//将container添加到body
+			document.body.appendChild(container);
+			
+			
+			
+			var gopher = document.createElement("div");
+			gopher.className = "gopher";
+			gopher.id = "gopher";
+			var str = "";
+			
+			for(var i = 0;i<12;i++){
+				str = str + "<div><img id='mole"+ i +"' src='img/vendor_people00.png' /></div>";
+			}
+			gopher.innerHTML = str;
+			
+			container.appendChild(gopher);
+			
+			
+			//获取所要用到的元素
+			var startbtn = document.querySelector(".startGame");
+			var timespan = document.querySelector(".time span");
+			var randomNum;
+			var score = 0;
+			var orClick = false;
+			
+			
+			
+			var endGame = function(){
+				var endImg = document.createElement("div");
+				endImg.id = "endImg";
+				endImg.innerHTML = '<img src="img/pop_score_bg.png" />'+
+										'<h3>'+score+'分</h3>'+
+										'<h2 id="again">再来一次</h2>';
+				document.body.appendChild(endImg);
+				
+				/*重新刷新页面*/
+				document.querySelector("#again").onclick = function(){
+					//console.log(window);
+					location.reload();
+				}
+			}
+			
+			var startEvent = function(){
+				startbtn.style.display = "none";
+				var num = 10;
+				//setInterval() 方法会不停地调用函数，直到 clearInterval() 被调用或窗口被关闭
+				var clearTime = setInterval(function(){
+					orClick = false;
+					for(var i = 0; i < 12;i++){
+						document.querySelector("#mole"+ i).src ="img/vendor_people00.png";
+					}
+					timespan.innerHTML = num + "s";
+					num--;
+					if(num<0){
+						clearInterval(clearTime);
+						console.log(score);
+						
+						endGame();
+					}
+					randomNum =parseInt(Math.random()*12);
+					document.querySelector("#mole"+randomNum).src = "img/vendor_hole01.png";
+				},1000);
+				
+				/*击打老鼠的事件*/
+				var clickMice = function(event){
+					console.log(event.target.id);
+					var str = "mole" +  randomNum;
+					/*点击的ID要相等，然后只点过一次*/
+					if(event.target.id == str&&!orClick){
+						event.target.src = "img/vendor_hole02.png";
+						score+=100;
+						orClick = true;
+					}
+					
+				}
+				
+				gopher.addEventListener("click",clickMice)
+			}
+			
+			
+			
+			
+			/*开始按钮事件*/
+			startbtn.addEventListener("click",startEvent);
+			
+			/*间隔函数*/
+//			console.log(parseInt(Math.random()*12));
+		</script>
+	</body>
+</html>
